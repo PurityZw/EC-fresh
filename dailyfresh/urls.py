@@ -18,9 +18,10 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^user/', include('apps.df_user.urls', namespace='user')),
-    url(r'^cart/', include('apps.df_cart.urls', namespace='cart')),
-    url(r'^order/', include('apps.df_order.urls', namespace='order')),
+    url(r'^tinymce/', include('tinymce.urls')),  # 富文本编辑器
+    url(r'^user/', include('df_user.urls', namespace='user')),
+    url(r'^cart/', include('df_cart.urls', namespace='cart')),
+    url(r'^order/', include('df_order.urls', namespace='order')),
     # ^一般放在最下用来匹配首页
-    url(r'^', include('apps.df_goods.urls', namespace='goods')),
+    url(r'^', include('df_goods.urls', namespace='goods')),
 ]
