@@ -5,8 +5,9 @@ from django.core.urlresolvers import reverse  # 导入反向解析重定向时�
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired  # 导入加密类
 from django.conf import settings  # 导入settings配置文件, 加密时需要使用SECRET_KEY
 from celery_tasks.task import send_register_active_email  # 导入celery的任务函数
-from django.contrib.auth import authenticate, login, logout # 对用户认证信息进行判断
-from df_user.models import User
+from django.contrib.auth import authenticate, login, logout  # 对用户认证信息进行判断
+from utils.Mixin import LoginRequiredMixin
+from df_user.models import User, Address
 from redis import StrictRedis
 import re
 
@@ -104,7 +105,12 @@ class ActiveView(View):
 # 登录页面
 class LoginView(View):
     def get(self, request):
-        return render(request, 'df_user/login.html')
+        username = request.COOKIES.get('username')
+        checked = 'checked'
+        if username is None:
+            username = ''
+            checked = ''
+        return render(request, 'df_user/login.html', {'username': username, 'checked': checked})
 
     def post(self, request):
         username = request.POST.get('username')
@@ -123,8 +129,16 @@ class LoginView(View):
                 # 使用认证系统记录用户登入状态
                 login(request, user)
 
+                next_url = request.GET.get('next', reverse('goods:index'))
+                response = redirect(next_url)
+
+                if remember == 'on':
+                    response.set_cookie('username', username, max_age=7 * 24 * 3600)
+                else:
+                    response.delete_cookie('username')
+
                 # 登录成功直接进入首页
-                return redirect(reverse('goods:index'))
+                return response
             else:
                 print('密码正确,但尚未激活')
                 return render(request, 'df_user/login.html', {'errmsg': '邮件尚未激活'})
@@ -141,3 +155,81 @@ class LogoutView(View):
         return redirect(reverse('user:login'))
 
 
+# 跳转用户中心页面
+class UserInfoView(LoginRequiredMixin, View):
+    """用户中心-信息页"""
+
+    def get(self, request):
+        """显示"""
+        address = Address.objects.get_default_address(request.user)
+        content = {
+            'user': request.user,
+            'phone': address.phone,
+            'addr': address.addr,
+            'page': 'user'
+        }
+        return render(request, 'df_order/user_center_info.html', content)
+
+
+# /user/order
+# class UserOrderView(View):
+class UserOrderView(LoginRequiredMixin, View):
+    """用户中心-订单页"""
+
+    def get(self, request):
+        """显示"""
+        return render(request, 'df_order/user_center_order.html', {'page': 'order'})
+
+
+# /user/address
+# class AddressView(View):
+class AddressView(LoginRequiredMixin, View):
+    """用户中心-地址页"""
+
+    def get(self, request):
+        """显示"""
+        address = Address.objects.get_default_address(user=request.user)
+        content = {
+            'address': address,
+            'page': 'address'
+        }
+
+        return render(request, 'df_order/user_center_site.html', content)
+
+    def post(self, request):
+        """用户收货地址提交"""
+        # 接收参数
+        receiver = request.POST.get('receiver')
+        addr = request.POST.get('recv_address')
+        recv_code = request.POST.get('recv_code')
+        phone = request.POST.get('phone')
+
+        # 参数校验
+        err_data_lose = {'errmsg': '数据不完整'}
+        err_phone = {'errmsg': '号码格式错误'}
+        if not all([receiver, addr, phone]):
+            return render(request, 'df_order/user_center_site.html', err_data_lose)
+
+        # 手机号码校验
+        # phone_re = re.match(r"^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$", phone)
+        # if not phone_re:
+        #     return render(request, 'df_order/user_center_site.html', err_phone)
+
+        # 业务处理
+        # 对默认地址进行判断
+        user = request.user
+        address = Address.objects.get_default_address(user)
+
+        is_default = True
+        if address is not None:
+            is_default = False
+
+        Address.objects.create(user=user,
+                               receiver=receiver,
+                               addr=addr,
+                               zip_code=recv_code,
+                               phone=phone,
+                               is_default=is_default)
+
+        # 返回应答
+        return redirect(reverse('user:address'))
