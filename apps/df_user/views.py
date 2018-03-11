@@ -4,8 +4,10 @@ from django.views.generic import View  # 导入视图类
 from django.core.urlresolvers import reverse  # 导入反向解析重定向时调用函数
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired  # 导入加密类
 from django.conf import settings  # 导入settings配置文件, 加密时需要使用SECRET_KEY
-from celery_tasks.task import send_register_activate_email  # 导入celery的任务函数
+from celery_tasks.task import send_register_active_email  # 导入celery的任务函数
+from django.contrib.auth import authenticate, login, logout # 对用户认证信息进行判断
 from df_user.models import User
+from redis import StrictRedis
 import re
 
 
@@ -68,7 +70,9 @@ class RegisterView(View):
         token = serializer.dumps({'user_id': user.id}).decode()
 
         # 使用celery进行邮件发送,
-        send_register_activate_email.delay(email, username, token)
+        send_register_active_email.delay(email, username, token)
+
+        # 返回应答: 跳转到首页
         return redirect(reverse('goods:index'))
 
 
@@ -76,17 +80,22 @@ class RegisterView(View):
 class ActiveView(View):
     # 用户点击邮箱链接属于Get请求
     def get(self, request, token):
+        print(token)
         # 对于用户的url请求进行解密
         serializer = Serializer(settings.SECRET_KEY, 300)
         # 在此处
         try:
             # 通过用户的token解密后的数据,得到user_id
-            user_id = serializer.load(token)['user_id']
+            user_info = serializer.loads(token)
+            user_id = user_info['user_id']
 
             # 通过user_id可以查询到对应的用户
             user = User.objects.get(id=user_id)
             user.is_active = 1
             user.save()
+
+            # 用户点击激活后,跳转到登录页面
+            return redirect(reverse('user:login'))
 
         except SignatureExpired as err:
             return HttpResponse('激活链接已失效')
@@ -96,3 +105,39 @@ class ActiveView(View):
 class LoginView(View):
     def get(self, request):
         return render(request, 'df_user/login.html')
+
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('pwd')
+        remember = request.POST.get('remember')
+        # 数据完整性校验
+        if not all([username, password]):
+            return render(request, 'df_user/login.html', {'errmsg': '数据输入不完整'})
+
+        # 登录校验 (使用系统认证系统函数)
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                print("用户已激活")
+
+                # 使用认证系统记录用户登入状态
+                login(request, user)
+
+                # 登录成功直接进入首页
+                return redirect(reverse('goods:index'))
+            else:
+                print('密码正确,但尚未激活')
+                return render(request, 'df_user/login.html', {'errmsg': '邮件尚未激活'})
+        else:
+            print("账号密码错误")
+            return render(request, 'df_user/login.html', {'errmsg': '账号密码错误'})
+
+
+# 退出账户
+class LogoutView(View):
+    def get(self, request):
+        # logout(request) 是django自带的登出函数,会清除登录者信息
+        logout(request)
+        return redirect(reverse('user:login'))
+
+
