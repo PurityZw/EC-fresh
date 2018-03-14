@@ -7,7 +7,9 @@ from django.conf import settings  # 导入settings配置文件, 加密时需要�
 from celery_tasks.task import send_register_active_email  # 导入celery的任务函数
 from django.contrib.auth import authenticate, login, logout  # 对用户认证信息进行判断
 from utils.Mixin import LoginRequiredMixin
+from django_redis import get_redis_connection
 from df_user.models import User, Address
+from df_goods.models import GoodsSKU
 from redis import StrictRedis
 import re
 
@@ -158,17 +160,43 @@ class LogoutView(View):
 # 跳转用户中心页面
 class UserInfoView(LoginRequiredMixin, View):
     """用户中心-信息页"""
-
     def get(self, request):
         """显示"""
-        address = Address.objects.get_default_address(request.user)
-        content = {
-            'user': request.user,
-            'phone': address.phone,
-            'addr': address.addr,
+        # 获取登录用户
+        user = request.user
+
+        # 获取用户的默认收货地址
+        address = Address.objects.get_default_address(user)
+
+        # 获取用户的最近浏览商品的信息
+        # from redis import StrictRedis
+        # conn = StrictRedis(host='172.16.179.142', port=6379, db=5)
+
+        # 返回StrictRedis类的对象
+        conn = get_redis_connection('default')
+        # 拼接key
+        history_key = 'history_%d' % user.id
+
+        # lrange(key, start, stop) 返回是列表
+        # 获取用户最新浏览的5个商品的id
+        sku_ids = conn.lrange(history_key, 0, 4) # [1, 3, 5, 2]
+
+        skus = []
+        for sku_id in sku_ids:
+            # 根据商品的id查询商品的信息
+            sku = GoodsSKU.objects.get(id=sku_id)
+            # 追加到skus列表中
+            skus.append(sku)
+
+        # 组织模板上下文
+        context = {
+            'address': address,
+            'skus': skus,
             'page': 'user'
         }
-        return render(request, 'df_order/user_center_info.html', content)
+
+        # 使用模板
+        return render(request, 'df_user/user_center_info.html', context)
 
 
 # /user/order
@@ -178,7 +206,7 @@ class UserOrderView(LoginRequiredMixin, View):
 
     def get(self, request):
         """显示"""
-        return render(request, 'df_order/user_center_order.html', {'page': 'order'})
+        return render(request, 'df_user/user_center_order.html', {'page': 'order'})
 
 
 # /user/address
@@ -194,7 +222,7 @@ class AddressView(LoginRequiredMixin, View):
             'page': 'address'
         }
 
-        return render(request, 'df_order/user_center_site.html', content)
+        return render(request, 'df_user/user_center_site.html', content)
 
     def post(self, request):
         """用户收货地址提交"""
@@ -208,7 +236,7 @@ class AddressView(LoginRequiredMixin, View):
         err_data_lose = {'errmsg': '数据不完整'}
         err_phone = {'errmsg': '号码格式错误'}
         if not all([receiver, addr, phone]):
-            return render(request, 'df_order/user_center_site.html', err_data_lose)
+            return render(request, 'df_user/user_center_site.html', err_data_lose)
 
         # 手机号码校验
         # phone_re = re.match(r"^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$", phone)
