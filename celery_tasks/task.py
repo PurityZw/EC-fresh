@@ -13,7 +13,7 @@ import os
 from df_goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner
 
 # 创建Celery类的对象
-app = Celery('celery_tasks.tasks', broker='redis://172.16.26.130:6379/4')
+app = Celery('celery_tasks.tasks', broker='redis://172.16.26.130:6379/1')
 
 
 # 封装任务函数
@@ -42,40 +42,92 @@ def send_register_active_email(to_email, username, token):
 
 @app.task
 def generate_static_index_html():
-    """
-    生成静态首页文件
-    :return:
-    """
 
-    # 获取商品分类
-    types = GoodsType.objects.all()
+    << << << < HEAD
+"""
+生成静态首页文件
+:return:
+"""
 
-    # 获取商品展示类
-    index_banner = IndexTypeGoodsBanner.objects.all().order_by('index')
+# 获取商品分类
+types = GoodsType.objects.all()
 
-    # 获取商品活动类, 根据index进行排序
-    promotion_banner = IndexPromotionBanner.objects.all().order_by('index')
+# 获取商品展示类
+index_banner = IndexTypeGoodsBanner.objects.all().order_by('index')
 
-    for type in types:
-        image_banner = IndexTypeGoodsBanner.objects.filter(type=type, display=1)
-        title_banner = IndexTypeGoodsBanner.objects.filter(type=type, display=0)
+# 获取商品活动类, 根据index进行排序
+promotion_banner = IndexPromotionBanner.objects.all().order_by('index')
 
-        # 给type对象动态增加属性
-        type.image_banner = image_banner
-        type.title_banner = title_banner
+for type in types:
+    image_banner = IndexTypeGoodsBanner.objects.filter(type=type, display=1)
+    title_banner = IndexTypeGoodsBanner.objects.filter(type=type, display=0)
 
-    # 由于静态文件是未登录状态,设置购物车为0
-    cart_count = 0
+    # 给type对象动态增加属性
+    type.image_banner = image_banner
+    type.title_banner = title_banner
 
-    # 使用模板
-    from django.template import loader
-    # 1.加载模板文件
-    temp = loader.get_template('static_index.html')
+# 由于静态文件是未登录状态,设置购物车为0
+cart_count = 0
 
-    # 2.模板渲染
-    static_temp = temp.render(temp)
+# 使用模板
+from django.template import loader
 
-    # 生成静态文件
-    save_path = os.path.join(settings.BASE_DIR, 'static/index.html')
-    with open(save_path, 'w') as f:
-        f.write(static_temp)
+# 1.加载模板文件
+temp = loader.get_template('static_index.html')
+
+# 2.模板渲染
+static_temp = temp.render(temp)
+
+# 生成静态文件
+save_path = os.path.join(settings.BASE_DIR, 'static/index.html')
+with open(save_path, 'w') as f:
+    f.write(static_temp)
+== == == =
+"""生成静态首页文件"""
+# 获取商品的分类信息
+types = GoodsType.objects.all()
+
+# 获取首页的轮播商品的信息
+index_banner = IndexGoodsBanner.objects.all().order_by('index')
+
+# 获取首页的促销活动的信息
+promotion_banner = IndexPromotionBanner.objects.all().order_by('index')
+
+# 获取首页分类商品的展示信息
+for type in types:
+    # 获取type种类在首页展示的图片商品的信息和文字商品的信息
+    # QuerySet
+    image_banner = IndexTypeGoodsBanner.objects.filter(type=type, display_type=1)
+    title_banner = IndexTypeGoodsBanner.objects.filter(type=type, display_type=0)
+
+    # 给type对象增加属性title_banner,image_banner
+    # 分别保存type种类在首页展示的文字商品和图片商品的信息
+    type.title_banner = title_banner
+    type.image_banner = image_banner
+
+# 判断用户用户是否已登录
+cart_count = 0
+
+# 组织模板上下文
+context = {
+    'types': types,
+    'index_banner': index_banner,
+    'promotion_banner': promotion_banner,
+    'cart_count': cart_count
+}
+
+# 使用模板
+# 1.加载模板文件
+from django.template import loader
+
+temp = loader.get_template('static_index.html')
+
+# 2.模板渲染
+static_html = temp.render(context)
+
+# 生成静态首页文件
+save_path = os.path.join(settings.BASE_DIR, 'static/index.html')
+with open(save_path, 'w') as f:
+    f.write(static_html)
+
+>> >> >> > a5154c19ee27e9e34bd06cc89b4666896ada743e
