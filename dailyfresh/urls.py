@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^tinymce/', include('tinymce.urls')),  # 富文本编辑器
     url(r'^user/', include('df_user.urls', namespace='user')),
-    url(r'^cart/', include('df_cart.urls', namespace='cart')),
+    url(r'^cart/', include('df_cart.urls', namespace='cart')),  # 购物车模块
     url(r'^order/', include('df_order.urls', namespace='order')),
     # ^一般放在最下用来匹配首页
     url(r'^', include('df_goods.urls', namespace='goods')),
