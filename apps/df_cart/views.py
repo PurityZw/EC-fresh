@@ -5,9 +5,11 @@ from django_redis import get_redis_connection
 from df_goods.models import GoodsSKU
 from utils.Mixin import LoginRequiredMixin
 
+
 # Create your views here.
 class CartAddView(View):
     """购物车记录添加"""
+
     def post(self, request):
         # 判断用户是否登录
         user = request.user
@@ -16,7 +18,7 @@ class CartAddView(View):
 
         # 获取参数
         sku_id = request.POST.get('sku_id')
-        count = request.POST.get('count') # 数字
+        count = request.POST.get('count')  # 数字
 
         # 参数校验
         if not all([sku_id, count]):
@@ -44,7 +46,7 @@ class CartAddView(View):
         # cart_1 : {'1':'3', '2':'5'}
         # hget(key, field)
         cart_count = conn.hget(cart_key, sku_id)
-
+        # print(cart_count)
         if cart_count:
             # 如果用户的购物车中已经添加过sku_id商品, 购物车中对应商品的数目需要进行累加
             count += int(cart_count)
@@ -63,10 +65,12 @@ class CartAddView(View):
         # 返回应答
         return JsonResponse({'res': 5, 'cart_count': cart_count, 'errmsg': '添加购物车记录成功'})
 
+
 # 购物车页面显示
 # get /cart/
 class CartInfoView(LoginRequiredMixin, View):
     """购物车页面显示"""
+
     def get(self, request):
         # 获取登录用户
         user = request.user
@@ -120,6 +124,7 @@ class CartInfoView(LoginRequiredMixin, View):
 # /cart/update
 class CartUpdateView(View):
     """购物车记录更新"""
+
     def post(self, request):
         # 判断用户是否登录
         user = request.user
@@ -171,6 +176,7 @@ class CartUpdateView(View):
 # ajax post请求
 class CartDeleteView(View):
     """购物车记录删除"""
+
     def post(self, request):
         # 判断用户是否登录
         user = request.user
@@ -203,6 +209,3 @@ class CartDeleteView(View):
 
         # 返回应答
         return JsonResponse({'res': 3, 'errmsg': '删除购物车记录成功'})
-
-
-

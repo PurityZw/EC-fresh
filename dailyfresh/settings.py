@@ -137,7 +137,7 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         # 设置django缓存的数据保存在redis数据库中
-        "LOCATION": "redis://172.16.26.130:6379/5",
+        "LOCATION": "redis://172.16.26.130:6379/4",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

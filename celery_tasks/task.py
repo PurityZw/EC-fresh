@@ -10,11 +10,11 @@ import os
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dailyfresh.settings")
 # django.setup()
 
-from goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner
+from df_goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner
 
 
 # 创建Celery类的对象
-app = Celery('celery_tasks.tasks', broker='redis://172.16.179.142:6379/4')
+app = Celery('celery_tasks.tasks', broker='redis://172.16.26.130:6379/4')
 
 
 # 封装任务函数
