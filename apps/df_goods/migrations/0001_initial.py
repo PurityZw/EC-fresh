@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('create_time', models.DateTimeField(verbose_name='创建时间', auto_now_add=True)),
                 ('update_time', models.DateTimeField(verbose_name='更新时间', auto_now=True)),
                 ('is_Delete', models.BooleanField(verbose_name='删除标记', default=False)),
-                ('image', models.ImageField(verbose_name='图片路径', upload_to='goods')),
+                ('image', models.ImageField(verbose_name='图片路径', upload_to='df_goods')),
             ],
             options={
                 'verbose_name': '商品图片',
@@ -53,11 +53,11 @@ class Migration(migrations.Migration):
                 ('desc', models.CharField(verbose_name='商品简介', max_length=256)),
                 ('price', models.DecimalField(verbose_name='商品价格', max_digits=10, decimal_places=2)),
                 ('unite', models.CharField(verbose_name='商品单位', max_length=20)),
-                ('image', models.ImageField(verbose_name='商品图片', upload_to='goods')),
+                ('image', models.ImageField(verbose_name='商品图片', upload_to='df_goods')),
                 ('stock', models.IntegerField(verbose_name='商品库存', default=1)),
                 ('sales', models.IntegerField(verbose_name='商品销量', default=0)),
                 ('status', models.SmallIntegerField(verbose_name='商品状态', default=1, choices=[(0, '下架'), (1, '上架')])),
-                ('goods', models.ForeignKey(verbose_name='商品SPU', to='df_goods.Goods')),
+                ('df_goods', models.ForeignKey(verbose_name='商品SPU', to='df_goods.Goods')),
             ],
             options={
                 'verbose_name': '商品',

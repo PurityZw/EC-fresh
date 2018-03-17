@@ -76,7 +76,7 @@ class RegisterView(View):
         send_register_active_email.delay(email, username, token)
 
         # 返回应答: 跳转到首页
-        return redirect(reverse('goods:index'))
+        return redirect(reverse('df_goods:index'))
 
 
 # 通过接收用户点击链接进行激活
@@ -131,7 +131,7 @@ class LoginView(View):
                 # 使用认证系统记录用户登入状态
                 login(request, user)
 
-                next_url = request.GET.get('next', reverse('goods:index'))
+                next_url = request.GET.get('next', reverse('df_goods:index'))
                 response = redirect(next_url)
 
                 if remember == 'on':

@@ -79,13 +79,13 @@ class IndexView(View):
 # 详情页视图
 # 前端传递的参数: 商品id(sku_id)
 # 前端传递的参数的方式:
-# 1) url捕获  /goods/商品id
-# 2) get传递  /goods?sku_id=商品id
+# 1) url捕获  /df_goods/商品id
+# 2) get传递  /df_goods?sku_id=商品id
 # 3) post传递
 
 
-# /goods/商品id
-# /goods/111111
+# /df_goods/商品id
+# /df_goods/111111
 class DetailView(View):
     """详情页视图"""
     def get(self, request, sku_id):
@@ -95,7 +95,7 @@ class DetailView(View):
             sku = GoodsSKU.objects.get(id=sku_id)
         except GoodsSKU.DoesNotExist:
             # 商品不存在，跳转到首页
-            return redirect(reverse('goods:index'))
+            return redirect(reverse('df_goods:index'))
 
         # 获取商品分类的信息
         types = GoodsType.objects.all()
@@ -161,7 +161,7 @@ class ListView(View):
             type = GoodsType.objects.get(id=type_id)
         except GoodsType.DoesNotExist:
             # 种类不存在，跳转到首页
-            return redirect(reverse('goods:index'))
+            return redirect(reverse('df_goods:index'))
 
         # 获取所有商品种类的信息
         types = GoodsType.objects.all()

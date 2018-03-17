@@ -30,7 +30,6 @@ class FDFSStorage(Storage):
         # 获取上传内容
         file_content = content.read()
 
-
         response = client.upload_by_buffer(file_content)
 
         if response is None or response.get('Status') != 'Upload successed.':
