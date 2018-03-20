@@ -10,6 +10,7 @@ from utils.Mixin import LoginRequiredMixin
 from django_redis import get_redis_connection
 from df_user.models import User, Address
 from df_goods.models import GoodsSKU
+from df_order.models import OrderInfo, OrderGoods
 from redis import StrictRedis
 import re
 
@@ -160,6 +161,7 @@ class LogoutView(View):
 # 跳转用户中心页面
 class UserInfoView(LoginRequiredMixin, View):
     """用户中心-信息页"""
+
     def get(self, request):
         """显示"""
         # 获取登录用户
@@ -179,7 +181,7 @@ class UserInfoView(LoginRequiredMixin, View):
 
         # lrange(key, start, stop) 返回是列表
         # 获取用户最新浏览的5个商品的id
-        sku_ids = conn.lrange(history_key, 0, 4) # [1, 3, 5, 2]
+        sku_ids = conn.lrange(history_key, 0, 4)  # [1, 3, 5, 2]
 
         skus = []
         for sku_id in sku_ids:
@@ -204,9 +206,68 @@ class UserInfoView(LoginRequiredMixin, View):
 class UserOrderView(LoginRequiredMixin, View):
     """用户中心-订单页"""
 
-    def get(self, request):
+    def get(self, request, page):
         """显示"""
-        return render(request, 'df_user/user_center_order.html', {'page': 'order'})
+        # 获取登录用户
+        user = request.user
+        # 获取用户的所有订单信息
+        orders = OrderInfo.objects.filter(user=user)
+
+        # 遍历获取每个订单对应的订单商品的信息
+        for order in orders:
+            # 获取订单商品的信息
+            order_skus = OrderGoods.objects.filter(order=order)
+
+            # 遍历order_skus计算订单中每件商品的小计
+            for order_sku in order_skus:
+                # 计算订单商品的小计
+                amount = order_sku.price * order_sku.count
+
+                # 给order_sku增加属性amount, 保存订单中每个商品的小计
+                order_sku.amount = amount
+
+            # 获取订单状态名称和计算订单实付款
+            order.status_title = OrderInfo.ORDER_STATUS[order.order_status]
+            order.total_pay = order.total_price + order.transit_price
+
+            # 给order对象增加属性order_skus，包含订单中订单商品的信息
+            order.order_skus = order_skus
+
+        # 分页
+        from django.core.paginator import Paginator
+        # Paginator(被分页的信息, 每页显示信息条数)
+        paginator = Paginator(orders, 3)
+
+        # 处理页码
+        page = int(page)
+
+        # 对用户输入的页码数进行判断, 如果大于总页数则设置页码为1
+        if page > paginator.num_pages:
+            page = 1
+
+        # 获取第page页的内容
+        order_page = paginator.page(page)
+
+        # 处理页码列表
+        num_pages = paginator.num_pages
+        if num_pages < 5:
+            pages = range(1, num_pages + 1)
+        elif page <= 3:
+            pages = range(1, 6)
+        elif num_pages - page <= 2:
+            pages = range(num_pages - 4, num_pages + 1)
+        else:
+            pages = range(num_pages - 2, num_pages + 3)
+
+        # 组织上下文
+        context = {
+            'order_page': order_page,
+            'pages': pages,
+            'page': 'order'
+        }
+
+        # 使用模板
+        return render(request, 'df_user/user_center_order.html', context)
 
 
 # /user/address

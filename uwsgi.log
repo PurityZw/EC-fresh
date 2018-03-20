@@ -1,0 +1,125 @@
+*** Starting uWSGI 2.0.17 (64bit) on [Mon Mar 19 15:31:19 2018] ***
+compiled with version: 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2) on 19 March 2018 07:13:11
+os: Darwin-16.7.0 Darwin Kernel Version 16.7.0: Thu Jun 15 17:36:27 PDT 2017; root:xnu-3789.70.16~2/RELEASE_X86_64
+nodename: zhaoweideMacBook-Pro.local
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /Users/zhaowei/Desktop/dailyfresh
+writing pidfile to uwsgi.pid
+detected binary path: /Users/zhaowei/.virtualenvs/my_dailyfresh/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /Users/zhaowei/Desktop/dailyfresh
+your processes number limit is 709
+your memory page size is 4096 bytes
+detected max file descriptor number: 10240
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uWSGI http bound on 127.0.0.1:8080 fd 4
+uwsgi socket 0 bound to TCP address 127.0.0.1:51698 (port auto-assigned) fd 3
+Python version: 3.6.1 (v3.6.1:69c0db5050, Mar 21 2017, 01:21:04)  [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)]
+!!! Python Home is not a directory: /Users/smart/.virtualenvs/dailyfresh !!!
+Set PythonHome to /Users/smart/.virtualenvs/dailyfresh
+Fatal Python error: Py_Initialize: unable to load the file system codec
+ModuleNotFoundError: No module named 'encodings'
+
+Current thread 0x00007fffa40b43c0 (most recent call first):
+*** Starting uWSGI 2.0.17 (64bit) on [Mon Mar 19 15:50:09 2018] ***
+compiled with version: 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2) on 19 March 2018 07:13:11
+os: Darwin-16.7.0 Darwin Kernel Version 16.7.0: Thu Jun 15 17:36:27 PDT 2017; root:xnu-3789.70.16~2/RELEASE_X86_64
+nodename: zhaoweideMacBook-Pro.local
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /Users/zhaowei/Desktop/dailyfresh
+writing pidfile to uwsgi.pid
+detected binary path: /Users/zhaowei/.virtualenvs/my_dailyfresh/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /Users/zhaowei/Desktop/dailyfresh
+your processes number limit is 709
+your memory page size is 4096 bytes
+detected max file descriptor number: 10240
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uWSGI http bound on 127.0.0.1:8080 fd 4
+uwsgi socket 0 bound to TCP address 127.0.0.1:51744 (port auto-assigned) fd 3
+Python version: 3.6.1 (v3.6.1:69c0db5050, Mar 21 2017, 01:21:04)  [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)]
+Set PythonHome to /Users/zhaowei/.virtualenvs/my_dailyfresh
+Python main interpreter initialized at 0x7fc9ff802400
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 416560 bytes (406 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x7fc9ff802400 pid: 5573 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 5573)
+spawned uWSGI worker 1 (pid: 5574, cores: 2)
+spawned uWSGI worker 2 (pid: 5575, cores: 2)
+spawned uWSGI worker 3 (pid: 5576, cores: 2)
+spawned uWSGI worker 4 (pid: 5577, cores: 2)
+spawned uWSGI http 1 (pid: 5578)
+设置首页缓存
+11
+[pid: 5577|app: 0|req: 1/1] 127.0.0.1 () {38 vars in 753 bytes} [Mon Mar 19 15:50:27 2018] GET /index => generated 18759 bytes in 1176 msecs (HTTP/1.1 200) 3 headers in 102 bytes (2 switches on core 0)
+[pid: 5577|app: 0|req: 2/2] 127.0.0.1 () {38 vars in 747 bytes} [Mon Mar 19 15:50:28 2018] GET /static/css/reset.css => generated 3076 bytes in 19 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5576|app: 0|req: 2/3] 127.0.0.1 () {38 vars in 728 bytes} [Mon Mar 19 15:50:28 2018] GET /static/js/slide.js => generated 3070 bytes in 755 msecs (HTTP/1.1 404) 2 headers in 80 bytes (2 switches on core 1)
+[pid: 5576|app: 0|req: 2/4] 127.0.0.1 () {38 vars in 752 bytes} [Mon Mar 19 15:50:28 2018] GET /static/js/jquery-1.12.4.min.js => generated 3106 bytes in 771 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5575|app: 0|req: 1/5] 127.0.0.1 () {38 vars in 745 bytes} [Mon Mar 19 15:50:28 2018] GET /static/css/main.css => generated 3073 bytes in 783 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5574|app: 0|req: 1/6] 127.0.0.1 () {38 vars in 744 bytes} [Mon Mar 19 15:50:28 2018] GET /static/js/jquery-ui.min.js => generated 3094 bytes in 803 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5577|app: 0|req: 4/7] 127.0.0.1 () {38 vars in 736 bytes} [Mon Mar 19 15:50:29 2018] GET /static/images/logo.png => generated 3082 bytes in 17 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5577|app: 0|req: 4/8] 127.0.0.1 () {38 vars in 728 bytes} [Mon Mar 19 15:50:29 2018] GET /static/js/slide.js => generated 3070 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 80 bytes (2 switches on core 1)
+[pid: 5577|app: 0|req: 5/9] 127.0.0.1 () {38 vars in 736 bytes} [Mon Mar 19 15:50:29 2018] GET /static/images/logo.png => generated 3082 bytes in 10 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+11
+[pid: 5577|app: 0|req: 6/10] 127.0.0.1 () {38 vars in 754 bytes} [Mon Mar 19 16:01:39 2018] GET /index => generated 18759 bytes in 205 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 1)
+[pid: 5577|app: 0|req: 7/11] 127.0.0.1 () {38 vars in 752 bytes} [Mon Mar 19 16:01:39 2018] GET /static/js/jquery-1.12.4.min.js => generated 3106 bytes in 21 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5576|app: 0|req: 3/12] 127.0.0.1 () {38 vars in 744 bytes} [Mon Mar 19 16:01:39 2018] GET /static/js/jquery-ui.min.js => generated 3094 bytes in 49 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5574|app: 0|req: 2/13] 127.0.0.1 () {38 vars in 747 bytes} [Mon Mar 19 16:01:39 2018] GET /static/css/reset.css => generated 3076 bytes in 55 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5575|app: 0|req: 3/14] 127.0.0.1 () {38 vars in 728 bytes} [Mon Mar 19 16:01:39 2018] GET /static/js/slide.js => generated 3070 bytes in 62 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5575|app: 0|req: 3/15] 127.0.0.1 () {38 vars in 745 bytes} [Mon Mar 19 16:01:39 2018] GET /static/css/main.css => generated 3073 bytes in 61 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5577|app: 0|req: 8/16] 127.0.0.1 () {38 vars in 736 bytes} [Mon Mar 19 16:01:39 2018] GET /static/images/logo.png => generated 3082 bytes in 19 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5577|app: 0|req: 9/17] 127.0.0.1 () {40 vars in 797 bytes} [Mon Mar 19 16:01:42 2018] GET /user/ => generated 6143 bytes in 60 msecs (HTTP/1.1 200) 3 headers in 102 bytes (1 switches on core 0)
+[pid: 5577|app: 0|req: 10/18] 127.0.0.1 () {38 vars in 745 bytes} [Mon Mar 19 16:01:43 2018] GET /static/css/main.css => generated 3073 bytes in 9 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5575|app: 0|req: 4/19] 127.0.0.1 () {38 vars in 747 bytes} [Mon Mar 19 16:01:43 2018] GET /static/css/reset.css => generated 3076 bytes in 10 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5575|app: 0|req: 5/20] 127.0.0.1 () {38 vars in 736 bytes} [Mon Mar 19 16:01:43 2018] GET /static/images/logo.png => generated 3082 bytes in 8 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5577|app: 0|req: 11/21] 127.0.0.1 () {38 vars in 743 bytes} [Mon Mar 19 17:43:12 2018] GET / => generated 3016 bytes in 31 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5577|app: 0|req: 12/22] 127.0.0.1 () {36 vars in 620 bytes} [Mon Mar 19 17:43:32 2018] GET / => generated 3014 bytes in 11 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5577|app: 0|req: 13/23] 127.0.0.1 () {34 vars in 547 bytes} [Mon Mar 19 17:43:32 2018] GET /favicon.ico => generated 3047 bytes in 8 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5577|app: 0|req: 14/24] 127.0.0.1 () {34 vars in 607 bytes} [Mon Mar 19 17:43:32 2018] GET /favicon.ico => generated 3047 bytes in 6 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 5577|app: 0|req: 15/25] 127.0.0.1 () {36 vars in 620 bytes} [Mon Mar 19 17:43:41 2018] GET / => generated 3014 bytes in 6 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+[pid: 5575|app: 0|req: 6/26] 127.0.0.1 () {32 vars in 1050 bytes} [Mon Mar 19 18:31:26 2018] GET /rpc/releaseTicket.action?buildNumber=2016.3.1+Build+PY-163.9735.8&clientVersion=3&hostName=192.168.72.35&machineId=025c572b-412d-4551-a192-832cd8448f97&productCode=e8d15448-eecd-440e-bbe9-1e5f754d781b&productFamilyId=e8d15448-eecd-440e-bbe9-1e5f754d781b&salt=1521455486902&secure=false&ticketId=1&userName=zhaowei => generated 3413 bytes in 42 msecs (HTTP/1.1 404) 2 headers in 80 bytes (1 switches on core 1)
+gateway "uWSGI http 1" has been buried (pid: 5578)
+...brutally killing workers...
+worker 4 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 1 buried after 1 seconds
+binary reloading uWSGI...
+chdir() to /Users/zhaowei/Desktop/dailyfresh
+closing all non-uwsgi socket fds > 2 (max_fd = 10240)...
+found fd 3 mapped to socket 0 (127.0.0.1:51744)
+running /Users/zhaowei/.virtualenvs/my_dailyfresh/bin/uwsgi
+[uWSGI] getting INI configuration from uwsgi.ini
+*** Starting uWSGI 2.0.17 (64bit) on [Mon Mar 19 18:31:45 2018] ***
+compiled with version: 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2) on 19 March 2018 07:13:11
+os: Darwin-16.7.0 Darwin Kernel Version 16.7.0: Thu Jun 15 17:36:27 PDT 2017; root:xnu-3789.70.16~2/RELEASE_X86_64
+nodename: zhaoweideMacBook-Pro.local
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /Users/zhaowei/Desktop/dailyfresh
+detected binary path: /Users/zhaowei/.virtualenvs/my_dailyfresh/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /Users/zhaowei/Desktop/dailyfresh
+your processes number limit is 709
+your memory page size is 4096 bytes
+detected max file descriptor number: 10240
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:8080 fd 3
+Python version: 3.6.1 (v3.6.1:69c0db5050, Mar 21 2017, 01:21:04)  [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)]
+Set PythonHome to /Users/zhaowei/.virtualenvs/dailyfresh
+Fatal Python error: Py_Initialize: unable to load the file system codec
+ModuleNotFoundError: No module named 'encodings'
+
+Current thread 0x00007fffa40b43c0 (most recent call first):

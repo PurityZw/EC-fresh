@@ -3,34 +3,34 @@
 {% block title %}天天生鲜-购物车{% endblock title %}
 {% block page_title %}购物车{% endblock page_title %}
 {% block body %}
-	<div class="total_count">全部商品<em>{{ total_count }}</em>件</div>
-	<ul class="cart_list_th clearfix">
-		<li class="col01">商品名称</li>
-		<li class="col02">商品单位</li>
-		<li class="col03">商品价格</li>
-		<li class="col04">数量</li>
-		<li class="col05">小计</li>
-		<li class="col06">操作</li>
-	</ul>
+    <div class="total_count">全部商品<em>{{ total_count }}</em>件</div>
+    <ul class="cart_list_th clearfix">
+        <li class="col01">商品名称</li>
+        <li class="col02">商品单位</li>
+        <li class="col03">商品价格</li>
+        <li class="col04">数量</li>
+        <li class="col05">小计</li>
+        <li class="col06">操作</li>
+    </ul>
     <form method="post" action="/order/place">
-    {# 遍历显示用户购物车中商品的记录 #}
-    {% for sku in skus %}
-        <ul class="cart_list_td clearfix">
-            <li class="col01"><input type="checkbox" name="sku_ids" value="{{ sku.id }}" checked></li>
-            <li class="col02"><img src="{{ sku.image.url }}"></li>
-            <li class="col03">{{ sku.name }}<br><em>{{ sku.price }}元/{{ sku.unite }}</em></li>
-            <li class="col04">{{ sku.unite }}</li>
-            <li class="col05">{{ sku.price }}元</li>
-            <li class="col06">
-                <div class="num_add">
-                    <a href="javascript:;" class="add fl">+</a>
-                    <input type="text" sku_id="{{ sku.id }}" class="num_show fl" value="{{ sku.count }}">
-                    <a href="javascript:;" class="minus fl">-</a>
-                </div>
-            </li>
-            <li class="col07">{{ sku.amount }}元</li>
-            <li class="col08"><a sku_id="{{ sku.id }}" href="javascript:;">删除</a></li>
-        </ul>
+        {# 遍历显示用户购物车中商品的记录 #}
+        {% for sku in skus %}
+            <ul class="cart_list_td clearfix">
+                <li class="col01"><input type="checkbox" name="sku_ids" value="{{ sku.id }}" checked></li>
+                <li class="col02"><img src="{{ sku.image.url }}"></li>
+                <li class="col03">{{ sku.name }}<br><em>{{ sku.price }}元/{{ sku.unite }}</em></li>
+                <li class="col04">{{ sku.unite }}</li>
+                <li class="col05">{{ sku.price }}元</li>
+                <li class="col06">
+                    <div class="num_add">
+                        <a href="javascript:;" class="add fl">+</a>
+                        <input type="text" sku_id="{{ sku.id }}" class="num_show fl" value="{{ sku.count }}">
+                        <a href="javascript:;" class="minus fl">-</a>
+                    </div>
+                </li>
+                <li class="col07">{{ sku.amount }}元</li>
+                <li class="col08"><a sku_id="{{ sku.id }}" href="javascript:;">删除</a></li>
+            </ul>
         {% endfor %}
 
         <ul class="settlements">
@@ -99,17 +99,17 @@
 
         // 购物车记录更新前端js通用的流程
         /*
-            1) 获取更新的商品id和更新数目
-            2) 更新redis中对应的购物车记录，
-            // 发起ajax post请求，访问/cart/update, 传递参数: sku_id count
-            3) 根据更新的结果进行操作
-            3.1 更新成功
-                a) 重新设置页面上对应购物车中商品的数目
-                b) 重新计算对应商品的小计
-                c) 判断商品是否被选中，如果选中，更新页面上被选中的商品的总数目和总价格
-                d) 更新页面上用户购物车中商品的总件数
-            3.2 更新失败
-                a) 提示错误的信息
+         1) 获取更新的商品id和更新数目
+         2) 更新redis中对应的购物车记录，
+         // 发起ajax post请求，访问/cart/update, 传递参数: sku_id count
+         3) 根据更新的结果进行操作
+         3.1 更新成功
+         a) 重新设置页面上对应购物车中商品的数目
+         b) 重新计算对应商品的小计
+         c) 判断商品是否被选中，如果选中，更新页面上被选中的商品的总数目和总价格
+         d) 更新页面上用户购物车中商品的总件数
+         3.2 更新失败
+         a) 提示错误的信息
          */
 
         // 更新redis中对应的购物车记录
@@ -149,9 +149,9 @@
             var price = sku_ul.children('.col05').text();
             var count = sku_ul.find('.num_show').val();
             // 计算商品的小计
-            var amount = parseInt(count)*parseFloat(price);
+            var amount = parseInt(count) * parseFloat(price);
             // 设置商品的小计
-            sku_ul.children('.col07').text(amount.toFixed(2)+'元');
+            sku_ul.children('.col07').text(amount.toFixed(2) + '元');
         }
 
         // 购物车记录增加
@@ -225,7 +225,7 @@
             var sku_id = $(this).attr('sku_id');
             var count = $(this).val();
             // 校验用户输入的商品的数量
-            if (isNaN(count) || count.trim().length==0 || parseInt(count)<=0){
+            if (isNaN(count) || count.trim().length == 0 || parseInt(count) <= 0) {
                 // 设置购物车中对应商品的数目为用户输入之前的数目
                 $(this).val(pre_count);
                 return;
@@ -260,16 +260,16 @@
 
         // 购物车记录删除js流程
         /*
-            1) 获取购物车记录中删除商品的id
-            2) 删除redis中对应的购物车记录
-            // 发起ajax post请求，访问/cart/delete, 传递参数: sku_id
-            3) 根据删除结果进行操作
-            3.1 删除成功
-                a）移除页面上商品所在的ul
-                b) 判断商品是否被选中，如果选中，更新页面上被选中的商品的总数目和总价格
-                c) 重新设置页面上用户购物车中商品的总件数
-            3.2 删除失败
-                a) 提示错误信息
+         1) 获取购物车记录中删除商品的id
+         2) 删除redis中对应的购物车记录
+         // 发起ajax post请求，访问/cart/delete, 传递参数: sku_id
+         3) 根据删除结果进行操作
+         3.1 删除成功
+         a）移除页面上商品所在的ul
+         b) 判断商品是否被选中，如果选中，更新页面上被选中的商品的总数目和总价格
+         c) 重新设置页面上用户购物车中商品的总件数
+         3.2 删除失败
+         a) 提示错误信息
          */
         $('.cart_list_td').children('.col08').children('a').click(function () {
             // 1) 获取购物车记录中删除商品的id
